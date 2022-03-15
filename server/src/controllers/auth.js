@@ -10,10 +10,14 @@ const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
   // our validation schema here
+  console.log(req.body);
   const schema = Joi.object({
     name: Joi.string().min(3).required(),
     email: Joi.string().email().min(6).required(),
-    password: Joi.string().min(6).required(),
+    password: Joi.string().min(6).required()
+      .messages({
+        'string.empty': `password gak boleh kosong`
+      }),
   });
 
   // do validation and get error object from schema.validate
@@ -21,7 +25,7 @@ exports.register = async (req, res) => {
 
   // if error exist send validation error message
   if (error)
-    return res.status(400).send({
+    return res.status(200).send({
       error: {
         message: error.details[0].message,
       },
